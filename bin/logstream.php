@@ -1,19 +1,7 @@
 <?php
 
-use AcquiaCloudApi\Connector\Client;
-use AcquiaCloudApi\Connector\Connector;
-use AcquiaCloudApi\Endpoints\Logs;
-use AcquiaLogstream\Logstream;
-use React\EventLoop\Factory as EventLoop;
-
-if (count($argv) !== 4) {
-    print 'Usage: php ./bin/logstream.php key secret environmentUuid' . PHP_EOL;
-    exit;
-}
-
-$key = $argv[1];
-$secret = $argv[2];
-$environmentUuid = $argv[3];
+use AcquiaLogstream\LogstreamCommand;
+use Symfony\Component\Console\Application;
 
 if (strpos(basename(__FILE__), 'phar')) {
     $root = __DIR__;
@@ -31,19 +19,8 @@ if (strpos(basename(__FILE__), 'phar')) {
     }
 }
 
-$config = [
-    'key' => $key,
-    'secret' => $secret
-];
+$application = new Application();
+$application->add(new LogstreamCommand());
 
-$connector = new Connector($config);
-$client = Client::factory($connector);
-
-$logs = new Logs($client);
-$stream = $logs->stream($environmentUuid);
-
-$params = $stream->logstream->params;
-$loop = EventLoop::create();
-$logstream = new Logstream($params->site, $params->hmac, $params->t, $params->environment);
-
-$logstream->stream($loop);
+$application->run();
+exit;
