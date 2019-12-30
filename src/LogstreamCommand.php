@@ -12,8 +12,8 @@ use AcquiaCloudApi\Connector\Connector;
 use AcquiaCloudApi\Endpoints\Logs;
 
 /**
- * Class AcquiaCli
- * @package AcquiaCli
+ * Class AcquiaLogstream
+ * @package AcquiaLogstream
  */
 class LogstreamCommand extends Command
 {

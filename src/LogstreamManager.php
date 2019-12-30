@@ -37,99 +37,6 @@ class LogstreamManager
         $this->environment = $params->environment;
     }
 
-    public function stream()
-    {
-
-        $loop = EventLoop::create();
-        $reactConnector = new React($loop, [
-            'dns' => $this->dns,
-            'timeout' => $this->timeout
-        ]);
-
-        $connector = new Ratchet($loop, $reactConnector);
-
-        $connector(self::LOGSTREAM_URI)
-        ->then(function (WebSocket $conn) {
-            $conn->on('message', function (MessageInterface $msg) use ($conn) {
-                $message = json_decode($msg);
-
-                switch ($message->cmd) {
-                    case 'available':
-                        if (empty($this->logTypes) || in_array($message->type, $this->logTypes)) {
-                            if (empty($this->servers) || in_array($message->server, $this->servers)) {
-                                $enable = [
-                                    'cmd' => 'enable',
-                                    'type' => $message->type,
-                                    'server' => $message->server
-                                ];
-    
-                                $conn->send(json_encode($enable));
-                            }
-                        }
-                        break;
-                    case 'connected':
-                    case 'success':
-                        if ($this->output->isDebug()) {
-                            $this->output->writeln($msg);
-                        }
-                        break;
-                    case 'line':
-                        $colour = '/';
-                        if ($this->colourise) {
-                            if (isset($message->http_status)) {
-                                switch ($message->http_status) {
-                                    case (preg_match('/^2/', $message->http_status) ? true : false):
-                                        $colour = 'fg=green';
-                                        break;
-                                    case (preg_match('/^3/', $message->http_status) ? true : false):
-                                        $colour = 'fg=cyan';
-                                        break;
-                                    case (preg_match('/^4/', $message->http_status) ? true : false):
-                                        $colour = 'fg=yellow';
-                                        break;
-                                    case (preg_match('/^5/', $message->http_status) ? true : false):
-                                        $colour = 'fg=red';
-                                        break;
-                                }
-                            }
-                        }
-
-                        if ($this->output->isVerbose()) {
-                            $this->output->writeln('<' . $colour . '>' . $msg . '</>');
-                        } else {
-                            $this->output->writeln('<' . $colour . '>' . $message->text . '</>');
-                        }
-                        
-                        break;
-                    case 'error':
-                        // $this->output->writeln('<fg=green>' . $msg. '</>');
-                        break;
-                    default:
-                        break;
-                }
-            });
-
-            $conn->on('close', function ($code = null, $reason = null) {
-                echo "Connection closed ({$code} - {$reason})\n";
-            });
-
-            $stream = [
-                'site' => $this->site,
-                'd' => $this->hmac,
-                't' => $this->time,
-                'env' => $this->environment,
-                'cmd' => 'stream-environment'
-            ];
-
-            $conn->send(json_encode($stream));
-        }, function (\Exception $e) use ($loop) {
-            echo "Could not connect: {$e->getMessage()}\n";
-            $loop->stop();
-        });
-
-        $loop->run();
-    }
-
     public function setLogServerFilter(array $servers)
     {
         $this->servers = $servers;
@@ -170,8 +77,119 @@ class LogstreamManager
     {
         $this->colourise = $colourise;
     }
-    public function ggetColourise()
+    public function getColourise()
     {
         return $this->colourise;
+    }
+
+    public function stream()
+    {
+
+        $loop = EventLoop::create();
+        $reactConnector = new React($loop, [
+            'dns' => $this->dns,
+            'timeout' => $this->timeout
+        ]);
+
+        $connector = new Ratchet($loop, $reactConnector);
+
+        $connector(self::LOGSTREAM_URI)
+        ->then(function (WebSocket $conn) {
+            $conn->on('message', function (MessageInterface $msg) use ($conn) {
+                $message = json_decode($msg);
+
+                switch ($message->cmd) {
+                    case 'available':
+                        if (empty($this->logTypes) || in_array($message->type, $this->logTypes)) {
+                            if (empty($this->servers) || in_array($message->server, $this->servers)) {
+                                $enable = [
+                                    'cmd' => 'enable',
+                                    'type' => $message->type,
+                                    'server' => $message->server
+                                ];
+    
+                                $conn->send(json_encode($enable));
+                            }
+                        }
+                        break;
+                    case 'connected':
+                    case 'success':
+                        if ($this->output->isDebug()) {
+                            $this->output->writeln($msg);
+                        }
+                        break;
+                    case 'line':
+                        $colour = '/';
+                        if ($this->colourise) {
+                            $colour = $this->pickColour($message);
+                        }
+
+                        if ($this->output->isVeryVerbose()) {
+                            $this->output->writeln("<${colour}>${msg}</>");
+                        }
+                        elseif ($this->output->isVerbose()) {
+                            $type = $message->log_type;
+                            $server = $message->server;
+                            $text = $message->text;
+                            $this->output->writeln("<${colour}> ${type} ${server} ${text}</>");
+                        } else {
+                            $this->output->writeln("<${colour}>" . $message->text . "</>");
+                        }
+                        
+                        break;
+                    case 'error':
+                        $this->output->writeln("<fg=red>${msg}</>");
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            $conn->on('close', function ($code = null, $reason = null) {
+                echo "Connection closed ({$code} - {$reason})\n";
+            });
+
+            $conn->send(json_encode($this->getAuthArray()));
+        }, function (\Exception $e) use ($loop) {
+            echo "Could not connect: {$e->getMessage()}\n";
+            $loop->stop();
+        });
+
+        $loop->run();
+    }
+
+    private function getAuthArray()
+    {
+        return [
+            'site' => $this->site,
+            'd' => $this->hmac,
+            't' => $this->time,
+            'env' => $this->environment,
+            'cmd' => 'stream-environment'
+        ];
+    }
+
+    private function pickColour($message)
+    {
+        $colour = '/';
+        if (isset($message->log_type)) {
+            switch ($message->log_type) {
+                case 'apache-error':
+                case 'php-error':
+                case 'mysql-slow':
+                    $colour = 'fg=red';
+                    break;
+                case 'apache-request':
+                case 'drupal-request':
+                    $colour = 'fg=yellow';
+                    break;
+
+                case 'bal-request':
+                case 'varnish-request':
+                    $colour = 'fg=green';
+                    break;
+            }
+        }
+        return $colour;
     }
 }
