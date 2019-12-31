@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @file This file is a simply shell wrapper for running Acquia Logstream command.
+ *
+ * Having a wrapper permits other non-shell files to directly require
+ * logstream.php.
+ */
+
+// Shell wrapper for Acquia Logstream.
+require_once __DIR__ . '/logstream.php';

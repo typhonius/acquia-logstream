@@ -33,7 +33,7 @@ class LogstreamCommand extends Command
                 'logtypes',
                 't',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Log types to stream (separate multiple types with a comma)',
+                'Log types to stream',
                 [
                     'bal-request',
                     'varnish-request',
@@ -49,7 +49,7 @@ class LogstreamCommand extends Command
                 'servers',
                 's',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Servers to stream logs from.'
+                'Servers to stream logs from e.g. web-1234.'
             )
             ->addOption(
                 'colourise',
