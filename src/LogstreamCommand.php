@@ -18,20 +18,11 @@ use AcquiaCloudApi\Endpoints\Logs;
 class LogstreamCommand extends Command
 {
 
-    const NAME = 'AcquiaLogstream';
-
-    const VERSION = '0.0.1-dev';
-
     protected static $defaultName = 'acquia:logstream';
 
     /**
-     * AcquiaLogstream constructor.
+     * @inheritdoc
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $this
@@ -68,6 +59,9 @@ class LogstreamCommand extends Command
             );
     }
     
+    /**
+     * @inheritdoc
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = [

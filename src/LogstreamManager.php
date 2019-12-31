@@ -27,6 +27,13 @@ class LogstreamManager
     private $timeout = 10;
     private $colourise = false;
 
+    /**
+     * LogstreamManager constructor.
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param object          $params
+     */
     public function __construct(InputInterface $input, OutputInterface $output, object $params)
     {
         $this->input = $input;
@@ -37,51 +44,107 @@ class LogstreamManager
         $this->environment = $params->environment;
     }
 
+    /**
+     * Sets servers to filter logs from.
+     *
+     * @param array $servers
+     */
     public function setLogServerFilter(array $servers)
     {
         $this->servers = $servers;
     }
 
+    /**
+     * Gets servers to filter logs from.
+     *
+     * @return array
+     */
     public function getLogServerFilter()
     {
         return $this->servers;
     }
 
+    /**
+     * Sets log types to filter logs from.
+     *
+     * @param array $types
+     */
     public function setLogTypeFilter(array $types)
     {
         $this->logTypes = $types;
     }
 
+    /**
+     * Gets log types to filter logs from.
+     *
+     * @return array
+     */
     public function getLogTypeFilter()
     {
         return $this->logTypes;
     }
 
+    /**
+     * Sets the DNS server to use for the React connector.
+     *
+     * @param string $dns
+     */
     public function setDns($dns)
     {
         $this->dns = $dns;
     }
+
+    /**
+     * Gets the DNS server used by the React connector.
+     *
+     * @return string
+     */
     public function getDns()
     {
         return $this->dns;
     }
+
+    /**
+     * Sets the timeout for the React connector.
+     *
+     * @param int $timeout
+     */
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
     }
+
+    /**
+     * Gets the timeout used by the React connector.
+     *
+     * @return int
+     */
     public function getTimeout()
     {
         return $this->timeout;
     }
+
+    /**
+     * Sets the output colourisation.
+     *
+     * @param bool $colourise
+     */
     public function setColourise(bool $colourise)
     {
         $this->colourise = $colourise;
     }
+
+    /**
+     * Gets the output colourisation.
+     */
     public function getColourise()
     {
         return $this->colourise;
     }
 
+    /**
+     * Streams the logs from the Acquia endpoint.
+     */
     public function stream()
     {
 
@@ -126,8 +189,7 @@ class LogstreamManager
 
                         if ($this->output->isVeryVerbose()) {
                             $this->output->writeln("<${colour}>${msg}</>");
-                        }
-                        elseif ($this->output->isVerbose()) {
+                        } elseif ($this->output->isVerbose()) {
                             $type = $message->log_type;
                             $server = $message->server;
                             $text = $message->text;
@@ -158,6 +220,11 @@ class LogstreamManager
         $loop->run();
     }
 
+    /**
+     * Returns the authentication array to be passed to the wss endpoint.
+     *
+     * @return array
+     */
     private function getAuthArray()
     {
         return [
@@ -169,6 +236,12 @@ class LogstreamManager
         ];
     }
 
+    /**
+     * Picks the colour to be output depending on log type.
+     *
+     * @param object $message
+     * @return string
+     */
     private function pickColour($message)
     {
         $colour = '/';
