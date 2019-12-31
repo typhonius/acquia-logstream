@@ -1,12 +1,7 @@
 [![Packagist](https://img.shields.io/packagist/v/typhonius/acquia-logstream.svg)](https://packagist.org/packages/typhonius/acquia-logstream)
-
 [![Build Status](https://travis-ci.org/typhonius/acquia-logstream.svg?branch=master)](https://travis-ci.org/typhonius/acquia-logstream)
-
 [![Total Downloads](https://poser.pugx.org/typhonius/acquia-logstream/downloads.png)](https://packagist.org/packages/typhonius/acquia-logstream)
-
 [![License](https://poser.pugx.org/typhonius/acquia-logstream/license.png)]()
-
-  
 
 # Acquia Logstream
 
@@ -58,7 +53,7 @@ $environmentUuid = 'FILL ME'
 
 $connector = new Connector($config);
 $client = Client::factory($connector);
- $logs = new Logs($client);
+$logs = new Logs($client);
 
 $stream = $logs->stream($environmentUuid);
 $params = $stream->logstream->params;
