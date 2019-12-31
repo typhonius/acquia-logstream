@@ -1,0 +1,20 @@
+sudo: false
+language: php
+
+php:
+    - 7.1
+    - 7.2
+    - 7.3
+
+before_install:
+    - composer self-update
+    - composer validate --no-check-all --ansi
+
+install:
+    - travis_retry composer install --no-interaction --prefer-source
+
+script:
+    - cd ${TRAVIS_BUILD_DIR}
+    - composer lint
+    - composer sniff
+    - composer stan

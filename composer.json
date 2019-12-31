@@ -11,7 +11,8 @@
     "require": {
         "typhonius/acquia-php-sdk-v2": "^2.0.0",
         "ratchet/pawl": "^0.3",
-        "symfony/console": "^4"
+        "symfony/console": "^4",
+        "phpstan/phpstan": "^0.11.19"
     },
     "autoload":{
         "psr-4":{
@@ -23,6 +24,7 @@
     },
     "scripts": {
         "lint": "php -l ./src/",
-        "sniff": "./vendor/bin/phpcs -s --standard=PSR2 ./src/"
+        "sniff": "./vendor/bin/phpcs -s --standard=PSR2 ./src/",
+        "stan": "./vendor/bin/phpstan analyse --level 5 src tests"
     }
 }
