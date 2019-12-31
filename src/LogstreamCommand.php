@@ -26,6 +26,8 @@ class LogstreamCommand extends Command
     protected function configure()
     {
         $this
+            ->setAliases(['logstream', 'stream'])
+            ->setDescription('Streams logs directly from the Acquia Cloud')
             ->addArgument('key', InputArgument::REQUIRED, 'Acquia API key')
             ->addArgument('secret', InputArgument::REQUIRED, 'Acquia API secret')
             ->addArgument('environmentUuid', InputArgument::REQUIRED, 'UUID of the environment to stream')
