@@ -25,6 +25,6 @@
     "scripts": {
         "lint": "php -l ./src/",
         "sniff": "./vendor/bin/phpcs -s --standard=PSR2 ./src/",
-        "stan": "./vendor/bin/phpstan analyse --level 5 src tests"
+        "stan": "./vendor/bin/phpstan analyse --level 5 src"
     }
 }
