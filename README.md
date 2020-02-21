@@ -25,13 +25,12 @@ To generate an API access token, login to [https://cloud.acquia.com](https://clo
 ### Standalone tools
 
 *Phar file*
+
 A Phar file will be attached to each tagged release on GitHub. This can be downloaded and used immediately with `php logstream.phar acquia:logstream`
 
 *Shell script*
-A shell script has been included as a wrapper for the logstream command which will allow users to run the logstream command directly without further requirements. This can be invoked by running `./bin/logstream acquia:logstream` from the cloned directory.
 
-The Acquia Logstream command takes three required arguments and three non-required options.
- 
+A shell script has been included as a wrapper for the logstream command which will allow users to run the logstream command directly without further requirements. This can be invoked by running `./bin/logstream acquia:logstream` from the cloned directory.
   
   
 ### PHP Library
