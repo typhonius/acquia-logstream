@@ -35,7 +35,7 @@ class LogstreamManager
      * @param OutputInterface $output
      * @param \stdClass       $params
      */
-    public function __construct(InputInterface $input, OutputInterface $output, object $params)
+    public function __construct(InputInterface $input, OutputInterface $output, \stdClass $params)
     {
         $this->input = $input;
         $this->output = $output;
@@ -57,7 +57,7 @@ class LogstreamManager
      *
      * @param array $servers
      */
-    public function setLogServerFilter(array $servers)
+    public function setLogServerFilter(array $servers) : void
     {
         $this->servers = $servers;
     }
@@ -67,7 +67,7 @@ class LogstreamManager
      *
      * @return array
      */
-    public function getLogServerFilter()
+    public function getLogServerFilter() : array
     {
         return $this->servers;
     }
@@ -77,7 +77,7 @@ class LogstreamManager
      *
      * @param array $types
      */
-    public function setLogTypeFilter(array $types)
+    public function setLogTypeFilter(array $types) : void
     {
         $this->logTypes = $types;
     }
@@ -87,7 +87,7 @@ class LogstreamManager
      *
      * @return array
      */
-    public function getLogTypeFilter()
+    public function getLogTypeFilter() : array
     {
         return $this->logTypes;
     }
@@ -97,7 +97,7 @@ class LogstreamManager
      *
      * @param string $dns
      */
-    public function setDns($dns)
+    public function setDns($dns) : void
     {
         $this->dns = $dns;
     }
@@ -107,7 +107,7 @@ class LogstreamManager
      *
      * @return string
      */
-    public function getDns()
+    public function getDns() : string
     {
         return $this->dns;
     }
@@ -117,7 +117,7 @@ class LogstreamManager
      *
      * @param int $timeout
      */
-    public function setTimeout($timeout)
+    public function setTimeout($timeout) : void
     {
         $this->timeout = $timeout;
     }
@@ -127,7 +127,7 @@ class LogstreamManager
      *
      * @return int
      */
-    public function getTimeout()
+    public function getTimeout() : int
     {
         return $this->timeout;
     }
@@ -137,15 +137,17 @@ class LogstreamManager
      *
      * @param bool $colourise
      */
-    public function setColourise(bool $colourise)
+    public function setColourise(bool $colourise) : void
     {
         $this->colourise = $colourise;
     }
 
     /**
      * Gets the output colourisation.
+     *
+     * @return bool
      */
-    public function getColourise()
+    public function getColourise() : bool
     {
         return $this->colourise;
     }
@@ -233,7 +235,7 @@ class LogstreamManager
      *
      * @return array
      */
-    private function getAuthArray()
+    private function getAuthArray() : array
     {
         return [
             'site' => $this->site,
@@ -250,7 +252,7 @@ class LogstreamManager
      * @param object $message
      * @return string
      */
-    private function pickColour($message)
+    private function pickColour($message) : string
     {
         $colour = '/';
         if (isset($message->log_type)) {
