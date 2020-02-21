@@ -26,18 +26,26 @@ class LogstreamManager
     private $dns = '1.1.1.1';
     private $timeout = 10;
     private $colourise = false;
+    private $requiredParams = ['site', 'hmac', 't', 'environment'];
 
     /**
      * LogstreamManager constructor.
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @param object          $params
+     * @param \stdClass       $params
      */
     public function __construct(InputInterface $input, OutputInterface $output, object $params)
     {
         $this->input = $input;
         $this->output = $output;
+
+        array_walk($this->requiredParams, function ($param, $key, $params) {
+            if (!property_exists($params, $param)) {
+                throw new \Exception(sprintf('Missing parameter: (%s)', $param));
+            }
+        }, $params);
+
         $this->site = $params->site;
         $this->hmac = $params->hmac;
         $this->time = $params->t;
