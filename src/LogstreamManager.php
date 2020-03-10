@@ -33,13 +33,20 @@ class LogstreamManager
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @param \stdClass       $params
      */
-    public function __construct(InputInterface $input, OutputInterface $output, \stdClass $params)
+    public function __construct(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
+    }
 
+    /**
+     * Sets required parameters for connecting.
+     *
+     * @param object $params
+     */
+    public function setParams(object $params) : void
+    {
         array_walk($this->requiredParams, function ($param, $key, $params) {
             if (!property_exists($params, $param)) {
                 throw new \Exception(sprintf('Missing parameter: (%s)', $param));

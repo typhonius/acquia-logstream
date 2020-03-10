@@ -76,9 +76,9 @@ class LogstreamCommand extends Command
         $logs = new Logs($client);
 
         $stream = $logs->stream($input->getArgument('environmentUuid'));
-        $params = $stream->logstream->params;
 
-        $logstream = new LogstreamManager($input, $output, $params);
+        $logstream = new LogstreamManager($input, $output);
+        $logstream->setParams($stream->logstream->params);
 
         $logstream->setLogTypeFilter($input->getOption('logtypes'));
         $logstream->setLogServerFilter($input->getOption('servers'));
