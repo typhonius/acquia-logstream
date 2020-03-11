@@ -43,9 +43,9 @@ class LogstreamManager
     /**
      * Sets required parameters for connecting.
      *
-     * @param object $params
+     * @param \stdClass $params
      */
-    public function setParams(object $params) : void
+    public function setParams(\stdClass $params) : void
     {
         array_walk($this->requiredParams, function ($param, $key, $params) {
             if (!property_exists($params, $param)) {
