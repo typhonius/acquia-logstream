@@ -1,25 +1,33 @@
 sudo: false
 language: php
-
 php:
-    - 7.1
-    - 7.2
-    - 7.3
-
+- 7.1
+- 7.2
+- 7.3
 before_install:
-    - composer self-update
-    - composer validate --no-check-all --ansi
-
+- composer self-update
+- composer validate --no-check-all --ansi
 install:
-    - travis_retry composer install --no-interaction --prefer-source
-
+- travis_retry composer install --no-interaction --prefer-source
 script:
-    - cd ${TRAVIS_BUILD_DIR}
-    - composer lint
-    - composer sniff
-    - composer test
-    - composer stan
-
-after_script:
-    - cd ${TRAVIS_BUILD_DIR}
-    - composer coveralls
+- cd ${TRAVIS_BUILD_DIR}
+- composer lint
+- composer sniff
+- composer test
+- composer stan
+after_success:
+- cd ${TRAVIS_BUILD_DIR}
+- composer coveralls
+before_deploy:
+  - composer phar:install-tools
+  - rm -rf vendor/*
+  - composer install --prefer-dist --no-dev --no-interaction
+  - composer phar:build
+deploy:
+  provider: releases
+  api_key:
+    secure: MWa2rz1USwE9MVibNWK8F7cktIfKiKjF9GS3cxGag+UnWeujL5h3mxvx8i6/FEPpkO+MpyLr7j1Y+TQvNYpA5Mh+BbuKQYnVu9mNZNMHgQgRWA3/E4gmbbmMY2WoWrSMpH/3KXyPLZQix1I/nkHaQDi9ResB0oj7Akrg3eOeJoSVBzzxlzJZ35mBxL+h0q6jOIZaeHEO1M/1gEQc2UJrzYFNCejIKoJXvjLtTZk4ff/PoWZnCgNYRuZiEg62nCLcAhhSYVnbjfjHHlLDP7r71Agxy0GfHeMKlPn4Hp/Tch/DDhX5gtc5txT8/MEA5Cqc9RsDogevx8ZYFcU/dQD0ohXNfHv2cYQpF0FL4tl7F6xi3+1T0T75tlbqMyMgLYTzuWI6Cm6zHcF0pR7oW3iWvfp5pmVgMSes6UN2lUY9tYu/HbwF7KLEphpUkQu2X4QSFdqhCTOwXKpa95GeDnDJy2peSblFOGqCAKLxxkIoeqwk9zMecDnBhGZdzf53aBtR3D0uuLEeLUmcPk4wwom9LXlmYv+kP2bv1i0eHp49qibINy1aWBhMkWdSMinS61WH4BKamA5XpmQaRvBtej6YydL93ozSKWhQYtqPR2QLmLieuDrITeE1iUUYyVNopUK1Na5R9WTIrNDvDefUOBc3P4H626rni6BZsQrtJxCmQ04=
+  file: logstream.phar
+  skip_cleanup: true
+  on:
+    repo: typhonius/acquia-logstream

@@ -1,2 +1,4 @@
 vendor
 tests/logs
+tools
+*.phar

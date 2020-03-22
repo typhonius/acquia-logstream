@@ -26,6 +26,12 @@
         "php-coveralls/php-coveralls": "^2.0.0"
     },
     "scripts": {
+        "phar:install-tools": [
+            "mkdir -p tools",
+            "curl -L https://github.com/humbug/box/releases/download/3.8.4/box.phar -o tools/box",
+            "chmod +x tools/box"
+        ],
+        "phar:build": "env PATH=tools:$PATH box compile",
         "lint": "php -l ./src/",
         "sniff": "./vendor/bin/phpcs -s --standard=PSR2 ./src/",
         "test": "./vendor/bin/phpunit --coverage-clover ./tests/logs/clover.xml",

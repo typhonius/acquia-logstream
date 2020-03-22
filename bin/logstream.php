@@ -3,21 +3,19 @@
 use AcquiaLogstream\LogstreamCommand;
 use Symfony\Component\Console\Application;
 
-if (strpos(basename(__FILE__), 'phar')) {
-    $root = __DIR__;
-    require_once 'phar://acquiacli.phar/vendor/autoload.php';
+$pharPath = \Phar::running(true);
+if ($pharPath) {
+    $autoloaderPath = "$pharPath/vendor/autoload.php";
 } else {
     if (file_exists(dirname(__DIR__).'/vendor/autoload.php')) {
-        $root = dirname(__DIR__);
-        require_once dirname(__DIR__) . '/vendor/autoload.php';
-    } elseif (file_exists(dirname(__DIR__) . '/../../autoload.php')) {
-        $root = dirname(__DIR__) . '/../../..';
-        require_once dirname(__DIR__) . '/../../autoload.php';
+        $autoloaderPath = dirname(__DIR__).'/vendor/autoload.php';
+    } elseif (file_exists(dirname(__DIR__).'/../../autoload.php')) {
+        $autoloaderPath = dirname(__DIR__) . '/../../autoload.php';
     } else {
-        $root = __DIR__;
-        require_once 'phar://acquiacli.phar/vendor/autoload.php';
+        die("Could not find autoloader. Run 'composer install'.");
     }
 }
+$classLoader = require $autoloaderPath;
 
 $application = new Application();
 $application->add(new LogstreamCommand());
