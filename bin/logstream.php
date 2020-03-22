@@ -17,7 +17,8 @@ if ($pharPath) {
 }
 $classLoader = require $autoloaderPath;
 
-$application = new Application();
+$version = trim(file_get_contents(dirname(__DIR__) . '/VERSION'));
+$application = new Application('Logstream', $version);
 $application->add(new LogstreamCommand());
 
 $application->run();

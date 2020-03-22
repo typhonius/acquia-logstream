@@ -36,6 +36,9 @@
         "sniff": "./vendor/bin/phpcs -s --standard=PSR2 ./src/",
         "test": "./vendor/bin/phpunit --coverage-clover ./tests/logs/clover.xml",
         "stan": "./vendor/bin/phpstan analyse --level 5 src",
-        "coveralls": "php ./vendor/bin/php-coveralls -v"
+        "coveralls": "php ./vendor/bin/php-coveralls -v",
+        "release": [
+            "release VERSION"
+        ]
     }
 }
