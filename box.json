@@ -3,6 +3,9 @@
     "directories": [
         "src"
     ],
+    "files": [
+        "VERSION"
+    ],
     "finder": [
         {
             "name": "*.php",

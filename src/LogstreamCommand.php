@@ -60,7 +60,7 @@ class LogstreamCommand extends Command
                 'Colorise the output based on HTTP status code.'
             );
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -70,7 +70,7 @@ class LogstreamCommand extends Command
             'key' => $input->getArgument('key'),
             'secret' => $input->getArgument('secret')
         ];
-        
+
         $connector = new Connector($config);
         $client = Client::factory($connector);
         $logs = new Logs($client);

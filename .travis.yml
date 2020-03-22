@@ -1,9 +1,9 @@
 sudo: false
 language: php
 php:
-- 7.1
 - 7.2
 - 7.3
+- 7.4
 before_install:
 - composer self-update
 - composer validate --no-check-all --ansi
@@ -30,4 +30,5 @@ deploy:
   file: logstream.phar
   skip_cleanup: true
   on:
+    tags: true
     repo: typhonius/acquia-logstream

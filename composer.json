@@ -12,7 +12,8 @@
         "typhonius/acquia-php-sdk-v2": "^2.0.0",
         "ratchet/pawl": "^0.3",
         "symfony/console": "^4",
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "consolidation/self-update": "^1.1"
     },
     "autoload":{
         "psr-4":{
@@ -36,6 +37,9 @@
         "sniff": "./vendor/bin/phpcs -s --standard=PSR2 ./src/",
         "test": "./vendor/bin/phpunit --coverage-clover ./tests/logs/clover.xml",
         "stan": "./vendor/bin/phpstan analyse --level 5 src",
-        "coveralls": "php ./vendor/bin/php-coveralls -v"
+        "coveralls": "php ./vendor/bin/php-coveralls -v",
+        "release": [
+            "release VERSION"
+        ]
     }
 }
