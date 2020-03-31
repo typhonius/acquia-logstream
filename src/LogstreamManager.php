@@ -13,7 +13,7 @@ use React\EventLoop\Factory as EventLoop;
 class LogstreamManager
 {
 
-    const LOGSTREAM_URI = 'wss://logstream.acquia.com:443/ah_websocket/logstream/v1';
+    public const LOGSTREAM_URI = 'wss://logstream.acquia.com:443/ah_websocket/logstream/v1';
 
     private $input;
     private $output;
@@ -45,13 +45,17 @@ class LogstreamManager
      *
      * @param \stdClass $params
      */
-    public function setParams(\stdClass $params) : void
+    public function setParams(\stdClass $params): void
     {
-        array_walk($this->requiredParams, function ($param, $key, $params) {
-            if (!property_exists($params, $param)) {
-                throw new \Exception(sprintf('Missing parameter: (%s)', $param));
-            }
-        }, $params);
+        array_walk(
+            $this->requiredParams,
+            function ($param, $key, $params) {
+                if (!property_exists($params, $param)) {
+                    throw new \Exception(sprintf('Missing parameter: (%s)', $param));
+                }
+            },
+            $params
+        );
 
         $this->site = $params->site;
         $this->hmac = $params->hmac;
@@ -64,7 +68,7 @@ class LogstreamManager
      *
      * @param array $servers
      */
-    public function setLogServerFilter(array $servers) : void
+    public function setLogServerFilter(array $servers): void
     {
         $this->servers = $servers;
     }
@@ -74,7 +78,7 @@ class LogstreamManager
      *
      * @return array
      */
-    public function getLogServerFilter() : array
+    public function getLogServerFilter(): array
     {
         return $this->servers;
     }
@@ -84,7 +88,7 @@ class LogstreamManager
      *
      * @param array $types
      */
-    public function setLogTypeFilter(array $types) : void
+    public function setLogTypeFilter(array $types): void
     {
         $this->logTypes = $types;
     }
@@ -94,7 +98,7 @@ class LogstreamManager
      *
      * @return array
      */
-    public function getLogTypeFilter() : array
+    public function getLogTypeFilter(): array
     {
         return $this->logTypes;
     }
@@ -104,7 +108,7 @@ class LogstreamManager
      *
      * @param string $dns
      */
-    public function setDns($dns) : void
+    public function setDns($dns): void
     {
         $this->dns = $dns;
     }
@@ -114,7 +118,7 @@ class LogstreamManager
      *
      * @return string
      */
-    public function getDns() : string
+    public function getDns(): string
     {
         return $this->dns;
     }
@@ -124,7 +128,7 @@ class LogstreamManager
      *
      * @param int $timeout
      */
-    public function setTimeout($timeout) : void
+    public function setTimeout($timeout): void
     {
         $this->timeout = $timeout;
     }
@@ -134,7 +138,7 @@ class LogstreamManager
      *
      * @return int
      */
-    public function getTimeout() : int
+    public function getTimeout(): int
     {
         return $this->timeout;
     }
@@ -144,7 +148,7 @@ class LogstreamManager
      *
      * @param bool $colourise
      */
-    public function setColourise(bool $colourise) : void
+    public function setColourise(bool $colourise): void
     {
         $this->colourise = $colourise;
     }
@@ -154,7 +158,7 @@ class LogstreamManager
      *
      * @return bool
      */
-    public function getColourise() : bool
+    public function getColourise(): bool
     {
         return $this->colourise;
     }
@@ -166,75 +170,86 @@ class LogstreamManager
     {
 
         $loop = EventLoop::create();
-        $reactConnector = new React($loop, [
-            'dns' => $this->dns,
-            'timeout' => $this->timeout
-        ]);
+        $reactConnector = new React(
+            $loop,
+            [
+                'dns' => $this->dns,
+                'timeout' => $this->timeout
+            ]
+        );
 
         $connector = new Ratchet($loop, $reactConnector);
 
         $connector(self::LOGSTREAM_URI)
-        ->then(function (WebSocket $conn) {
-            $conn->on('message', function (MessageInterface $msg) use ($conn) {
-                $message = json_decode($msg);
+            ->then(
+                function (WebSocket $conn) {
+                    $conn->on(
+                        'message',
+                        function (MessageInterface $msg) use ($conn) {
+                            $this->processMessage($conn, $msg);
+                        }
+                    );
 
-                switch ($message->cmd) {
-                    case 'available':
-                        if (empty($this->logTypes) || in_array($message->type, $this->logTypes)) {
-                            if (empty($this->servers) || in_array($message->server, $this->servers)) {
-                                $enable = [
-                                    'cmd' => 'enable',
-                                    'type' => $message->type,
-                                    'server' => $message->server
-                                ];
-    
-                                $conn->send(json_encode($enable));
-                            }
+                    $conn->on(
+                        'close',
+                        function ($code = null, $reason = null) {
+                            echo "Connection closed ({$code} - {$reason})\n";
                         }
-                        break;
-                    case 'connected':
-                    case 'success':
-                        if ($this->output->isDebug()) {
-                            $this->output->writeln($msg);
-                        }
-                        break;
-                    case 'line':
-                        $colour = '/';
-                        if ($this->colourise) {
-                            $colour = $this->pickColour($message);
-                        }
+                    );
 
-                        if ($this->output->isVeryVerbose()) {
-                            $this->output->writeln("<${colour}>${msg}</>");
-                        } elseif ($this->output->isVerbose()) {
-                            $type = $message->log_type;
-                            $server = $message->server;
-                            $text = $message->text;
-                            $this->output->writeln("<${colour}> ${type} ${server} ${text}</>");
-                        } else {
-                            $this->output->writeln("<${colour}>" . $message->text . "</>");
-                        }
-                        
-                        break;
-                    case 'error':
-                        $this->output->writeln("<fg=red>${msg}</>");
-                        break;
-                    default:
-                        break;
+                    $conn->send(json_encode($this->getAuthArray()));
+                },
+                function (\Exception $e) use ($loop) {
+                    echo "Could not connect: {$e->getMessage()}\n";
+                    $loop->stop();
                 }
-            });
-
-            $conn->on('close', function ($code = null, $reason = null) {
-                echo "Connection closed ({$code} - {$reason})\n";
-            });
-
-            $conn->send(json_encode($this->getAuthArray()));
-        }, function (\Exception $e) use ($loop) {
-            echo "Could not connect: {$e->getMessage()}\n";
-            $loop->stop();
-        });
+            );
 
         $loop->run();
+    }
+
+    private function processMessage($conn, $msg)
+    {
+        $message = json_decode($msg);
+
+        if ($message->cmd === 'available') {
+            if (empty($this->logTypes) || in_array($message->type, $this->logTypes)) {
+                if (empty($this->servers) || in_array($message->server, $this->servers)) {
+                    $enable = [
+                        'cmd' => 'enable',
+                        'type' => $message->type,
+                        'server' => $message->server
+                    ];
+
+                    $conn->send(json_encode($enable));
+                }
+            }
+        } elseif ($message->cmd === 'connected' || $message->cmd === 'success') {
+            if ($this->output->isDebug()) {
+                $this->output->writeln($msg);
+            }
+        } elseif ($message->cmd === 'line') {
+            
+            $colour = $this->pickColour($message);
+            
+            if ($this->output->isVeryVerbose()) {
+                $this->output->writeln(sprintf('<%s>%s</>', $colour, $msg));
+            } elseif ($this->output->isVerbose()) {
+                $this->output->writeln(
+                    sprintf(
+                        '<%s>%s %s %s</>',
+                        $colour,
+                        $message->log_type,
+                        $message->server,
+                        $message->text
+                    )
+                );
+            } else {
+                $this->output->writeln(sprintf('<%s>%s</>', $colour, $message->text));
+            }
+        } elseif ($message->cmd === 'error') {
+            $this->output->writeln(sprintf('<fg=red>%s</>', $msg));
+        }
     }
 
     /**
@@ -242,7 +257,7 @@ class LogstreamManager
      *
      * @return array
      */
-    private function getAuthArray() : array
+    private function getAuthArray(): array
     {
         return [
             'site' => $this->site,
@@ -256,12 +271,16 @@ class LogstreamManager
     /**
      * Picks the colour to be output depending on log type.
      *
-     * @param object $message
+     * @param  object $message
      * @return string
      */
-    private function pickColour($message) : string
+    private function pickColour($message): string
     {
         $colour = '/';
+        if (!$this->colourise) {
+            return $colour;
+        }
+
         if (isset($message->log_type)) {
             switch ($message->log_type) {
                 case 'apache-error':
@@ -273,7 +292,6 @@ class LogstreamManager
                 case 'drupal-request':
                     $colour = 'fg=yellow';
                     break;
-
                 case 'bal-request':
                 case 'varnish-request':
                     $colour = 'fg=green';

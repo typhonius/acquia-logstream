@@ -13,6 +13,7 @@ use AcquiaCloudApi\Endpoints\Logs;
 
 /**
  * Class AcquiaLogstream
+ *
  * @package AcquiaLogstream
  */
 class LogstreamCommand extends Command
