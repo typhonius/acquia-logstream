@@ -121,12 +121,25 @@ class LogstreamManagerTest extends CloudApiTestCase
         $message1 = new \stdClass();
         $message1->server = 'bal-12345';
         $message1->cmd = 'line';
-        $message1->type = 'varnish-request';
+        $message1->log_type = 'varnish-request';
         $message1->text = '{"time": "[31/Mar/2020:02:42:43 +0000]", "status": "200", "bytes": "28", "method": "POST", "host": "www.example.com.au", "url": "/node/101/edit", "query": "?ajax_form=1&_wrapper_format=drupal_ajax", "referrer": "https://www.example.com.au/node/101/edit", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36", "client_ip": "127.0.0.1", "time_firstbyte": "0.251411", "hitmiss": "miss", "handling": "pass", "forwarded_for": "127.0.0.2, 127.0.0.3", "request_id": "v-4c0f50ba-72f9-11ea-9b7e-23cb5f242a04", "ah_log": "", "ah_application_id": "5a367d31-ca9e-4ee4-aa42-e5a6f50e108a", "ah_environment": "prod", "ah_trace_id": "XoKuI6wQADYAADV2x7oAAAAU"}"';
         $this->invokeMethod($this->logstream, 'processMessage', [json_encode($message1)]);
-
         $lineResponse = <<< LINE
 {"time": "[31/Mar/2020:02:42:43 +0000]", "status": "200", "bytes": "28", "method": "POST", "host": "www.example.com.au", "url": "/node/101/edit", "query": "?ajax_form=1&_wrapper_format=drupal_ajax", "referrer": "https://www.example.com.au/node/101/edit", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36", "client_ip": "127.0.0.1", "time_firstbyte": "0.251411", "hitmiss": "miss", "handling": "pass", "forwarded_for": "127.0.0.2, 127.0.0.3", "request_id": "v-4c0f50ba-72f9-11ea-9b7e-23cb5f242a04", "ah_log": "", "ah_application_id": "5a367d31-ca9e-4ee4-aa42-e5a6f50e108a", "ah_environment": "prod", "ah_trace_id": "XoKuI6wQADYAADV2x7oAAAAU"}"
+LINE;
+        $this->assertEquals($lineResponse . PHP_EOL, $this->output->fetch());
+
+        $this->output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+        $this->invokeMethod($this->logstream, 'processMessage', [json_encode($message1)]);
+        $lineResponse = <<< LINE
+varnish-request bal-12345 {"time": "[31/Mar/2020:02:42:43 +0000]", "status": "200", "bytes": "28", "method": "POST", "host": "www.example.com.au", "url": "/node/101/edit", "query": "?ajax_form=1&_wrapper_format=drupal_ajax", "referrer": "https://www.example.com.au/node/101/edit", "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36", "client_ip": "127.0.0.1", "time_firstbyte": "0.251411", "hitmiss": "miss", "handling": "pass", "forwarded_for": "127.0.0.2, 127.0.0.3", "request_id": "v-4c0f50ba-72f9-11ea-9b7e-23cb5f242a04", "ah_log": "", "ah_application_id": "5a367d31-ca9e-4ee4-aa42-e5a6f50e108a", "ah_environment": "prod", "ah_trace_id": "XoKuI6wQADYAADV2x7oAAAAU"}"
+LINE;
+        $this->assertEquals($lineResponse . PHP_EOL, $this->output->fetch());
+
+        $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->invokeMethod($this->logstream, 'processMessage', [json_encode($message1)]);
+        $lineResponse = <<< LINE
+{"server":"bal-12345","cmd":"line","log_type":"varnish-request","text":"{\"time\": \"[31\/Mar\/2020:02:42:43 +0000]\", \"status\": \"200\", \"bytes\": \"28\", \"method\": \"POST\", \"host\": \"www.example.com.au\", \"url\": \"\/node\/101\/edit\", \"query\": \"?ajax_form=1&_wrapper_format=drupal_ajax\", \"referrer\": \"https:\/\/www.example.com.au\/node\/101\/edit\", \"user_agent\": \"Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/80.0.3987.149 Safari\/537.36\", \"client_ip\": \"127.0.0.1\", \"time_firstbyte\": \"0.251411\", \"hitmiss\": \"miss\", \"handling\": \"pass\", \"forwarded_for\": \"127.0.0.2, 127.0.0.3\", \"request_id\": \"v-4c0f50ba-72f9-11ea-9b7e-23cb5f242a04\", \"ah_log\": \"\", \"ah_application_id\": \"5a367d31-ca9e-4ee4-aa42-e5a6f50e108a\", \"ah_environment\": \"prod\", \"ah_trace_id\": \"XoKuI6wQADYAADV2x7oAAAAU\"}\""}
 LINE;
         $this->assertEquals($lineResponse . PHP_EOL, $this->output->fetch());
 
@@ -154,7 +167,7 @@ LINE;
         $message3 = new \stdClass();
         $message3->server = 'bal-12345';
         $message3->cmd = 'connected';
-        $this->output->setVerbosity(OutputInterface::VERBOSITY_QUIET);
+        $this->output->setVerbosity(OutputInterface::VERBOSITY_NORMAL);
         $this->invokeMethod($this->logstream, 'processMessage', [json_encode($message3)]);
         $this->assertEquals('', $this->output->fetch());
 
@@ -166,9 +179,20 @@ LINE;
 LINE;
 
         $this->assertEquals($lineResponse . PHP_EOL, $this->output->fetch());
-
-
     }
 
+    public function testAuthArray()
+    {
+        $authArray = [
+            'site' => 'site',
+            'd' => 'hmac',
+            't' => 't',
+            'env' => 'environment',
+            'cmd' => 'stream-environment'
+        ];
 
+        $response = $this->invokeMethod($this->logstream, 'getAuthArray', []);
+        $this->assertEquals($authArray, $response);
+        // var_dump($response);
+    }
 }
