@@ -179,6 +179,15 @@ LINE;
 LINE;
 
         $this->assertEquals($lineResponse . PHP_EOL, $this->output->fetch());
+    
+        // Check error response
+        $this->output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
+
+        $message = new \stdClass();
+        $message->cmd = 'error';
+        $message->msg = 'error';
+        $this->invokeMethod($this->logstream, 'processMessage', [json_encode($message)]);
+        $this->assertEquals('{"cmd":"error","msg":"error"}' . PHP_EOL, $this->output->fetch());
     }
 
     public function testAuthArray()
@@ -193,6 +202,5 @@ LINE;
 
         $response = $this->invokeMethod($this->logstream, 'getAuthArray', []);
         $this->assertEquals($authArray, $response);
-        // var_dump($response);
     }
 }

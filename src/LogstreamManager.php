@@ -245,7 +245,7 @@ class LogstreamManager
                 $this->output->writeln(sprintf('<%s>%s</>', $colour, $message->text));
             }
         } elseif ($message->cmd === 'error') {
-            $this->output->writeln(sprintf('<fg=red>%s</>', $msg));
+            $this->output->writeln(sprintf('<%s>%s</>', 'fg=red', $msg));
         } else {
             if ($this->output->isDebug()) {
                 $this->output->writeln($msg);
