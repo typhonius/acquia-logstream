@@ -186,7 +186,9 @@ class LogstreamManager
                     $conn->on(
                         'message',
                         function (MessageInterface $msg) use ($conn) {
-                            $this->processMessage($conn, $msg);
+                            if ($send = $this->processMessage($msg)) {
+                                $conn->send($send);
+                            }
                         }
                     );
 
@@ -208,7 +210,7 @@ class LogstreamManager
         $loop->run();
     }
 
-    private function processMessage($conn, $msg)
+    protected function processMessage($msg)
     {
         $message = json_decode($msg);
 
@@ -221,15 +223,10 @@ class LogstreamManager
                         'server' => $message->server
                     ];
 
-                    $conn->send(json_encode($enable));
+                    return json_encode($enable);
                 }
             }
-        } elseif ($message->cmd === 'connected' || $message->cmd === 'success') {
-            if ($this->output->isDebug()) {
-                $this->output->writeln($msg);
-            }
         } elseif ($message->cmd === 'line') {
-            
             $colour = $this->pickColour($message);
             
             if ($this->output->isVeryVerbose()) {
@@ -249,6 +246,10 @@ class LogstreamManager
             }
         } elseif ($message->cmd === 'error') {
             $this->output->writeln(sprintf('<fg=red>%s</>', $msg));
+        } else {
+            if ($this->output->isDebug()) {
+                $this->output->writeln($msg);
+            }
         }
     }
 
@@ -257,7 +258,7 @@ class LogstreamManager
      *
      * @return array
      */
-    private function getAuthArray(): array
+    protected function getAuthArray(): array
     {
         return [
             'site' => $this->site,
@@ -274,7 +275,7 @@ class LogstreamManager
      * @param  object $message
      * @return string
      */
-    private function pickColour($message): string
+    protected function pickColour($message): string
     {
         $colour = '/';
         if (!$this->colourise) {
