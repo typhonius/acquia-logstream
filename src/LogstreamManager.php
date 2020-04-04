@@ -43,6 +43,18 @@ class LogstreamManager
     /**
      * Sets required parameters for connecting.
      *
+     * The $params argument required for this class must be an object of
+     * stdClass with properties for the following:
+     * - site: The sitename to initiate logstreaming with.
+     * - hmac: A HMAC hash passed back from the API.
+     * - time: The timestamp.
+     * - environment: The environment name to use for logstreaming.
+     *
+     * The easiest way to obtain the required parameters for this method is
+     * to use the API to get a $param object.
+     *
+     * @see LogstreamCommand::execute
+     *
      * @param \stdClass $params
      */
     public function setParams(\stdClass $params): void

@@ -4,14 +4,13 @@ namespace AcquiaLogstream\Tests;
 
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 use PHPUnit\Framework\TestCase;
 use AcquiaLogstream\LogstreamManager;
 
 /**
- * Class CloudApiTestCase
+ * Class AcquiaLogstreamTestCase
  */
-abstract class CloudApiTestCase extends TestCase
+abstract class AcquiaLogstreamTestCase extends TestCase
 {
 
     protected $output;

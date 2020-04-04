@@ -4,7 +4,7 @@ namespace AcquiaLogstream\Tests;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LogstreamManagerTest extends CloudApiTestCase
+class LogstreamManagerTest extends AcquiaLogstreamTestCase
 {
 
     public function testSetLogServerFilter()
@@ -202,5 +202,17 @@ LINE;
 
         $response = $this->invokeMethod($this->logstream, 'getAuthArray', []);
         $this->assertEquals($authArray, $response);
+    }
+
+    public function testSetParamsException()
+    {
+        $params = new \stdClass();
+        $params->site = 'site';
+        $params->t = 't';
+        $params->environment = 'environment';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing parameter: (hmac)');
+        $this->logstream->setParams($params);
     }
 }

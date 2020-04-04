@@ -10,7 +10,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 /**
- * Class CloudApiTestCase
+ * Class LogstreamCommandTest
  */
 class LogstreamCommandTest extends TestCase
 {
