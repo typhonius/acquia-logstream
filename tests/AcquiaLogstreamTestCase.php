@@ -16,7 +16,7 @@ abstract class AcquiaLogstreamTestCase extends TestCase
     protected $output;
     protected $logstream;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         $input = new ArgvInput();
         $this->output = new BufferedOutput();
@@ -30,7 +30,7 @@ abstract class AcquiaLogstreamTestCase extends TestCase
         $this->logstream->setParams($params);
     }
 
-    public function getPrivateProperty($class, $propertyName) : \ReflectionProperty
+    public function getPrivateProperty($class, $propertyName): \ReflectionProperty
     {
         $reflector = new \ReflectionClass(get_class($class));
         $property = $reflector->getProperty($propertyName);
@@ -39,7 +39,7 @@ abstract class AcquiaLogstreamTestCase extends TestCase
         return $property;
     }
 
-    protected function setPrivateProperty($class, $propertyName, $value) : void
+    protected function setPrivateProperty($class, $propertyName, $value): void
     {
         $reflection = new \ReflectionProperty(get_class($class), $propertyName);
         $reflection->setAccessible(true);
