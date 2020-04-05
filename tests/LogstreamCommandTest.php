@@ -47,8 +47,8 @@ OUTPUT;
         $tester = new ApplicationTester($application);
         $tester->run(['acquia:logstream', '--help']);
         $realOutput = $tester->getDisplay();
-        // var_dump($realOutput);
 
+        // phpcs:disable Generic.Files.LineLength.TooLong
         $expectedOutput = <<< OUTPUT
 Description:
   Streams logs directly from the Acquia Cloud
@@ -75,6 +75,7 @@ Options:
   -n, --no-interaction     Do not ask any interactive question
   -v|vv|vvv, --verbose     Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 OUTPUT;
+        // phpcs:enable
 
         $this->assertEquals($expectedOutput . PHP_EOL, $realOutput);
     }
