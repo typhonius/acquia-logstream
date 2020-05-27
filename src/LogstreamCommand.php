@@ -65,7 +65,7 @@ class LogstreamCommand extends Command
     /**
      * @inheritdoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = [
             'key' => $input->getArgument('key'),
@@ -85,5 +85,6 @@ class LogstreamCommand extends Command
         $logstream->setLogServerFilter($input->getOption('servers'));
         $logstream->setColourise($input->getOption('colourise'));
         $logstream->stream();
+        return 0;
     }
 }
