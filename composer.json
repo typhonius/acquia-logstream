@@ -13,7 +13,8 @@
         "ratchet/pawl": "^0.3",
         "symfony/console": "^4 || ^5",
         "php": ">=7.1",
-        "consolidation/self-update": "^1.1"
+        "consolidation/self-update": "^1.1",
+        "symfony/yaml": "^4|^5"
     },
     "autoload":{
         "psr-4":{
