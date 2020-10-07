@@ -4,7 +4,8 @@
         "src"
     ],
     "files": [
-        "VERSION"
+        "VERSION",
+        "vendor/typhonius/acquia-php-sdk-v2/VERSION"
     ],
     "finder": [
         {
