@@ -9,6 +9,9 @@ on:
 
   pull_request:
     branches: [ master ]
+    tags:
+      - '0.*'
+      - '1.*'
 
 jobs:
   run:
@@ -92,6 +95,7 @@ jobs:
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
+      if: runner.os == 'Linux' && matrix.php-versions == '7.3'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
