@@ -81,6 +81,10 @@ jobs:
         path: ./tests/logs/phpunit.html
         if-no-files-found: error
 
+    - name: Test release version
+      if: runner.os == 'Linux' && matrix.php-versions == '7.3'
+      run: echo Release version Linux/7.3
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -94,6 +98,7 @@ jobs:
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
+      if: runner.os == 'Linux' && matrix.php-versions == '7.3'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
