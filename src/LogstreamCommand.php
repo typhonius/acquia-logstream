@@ -74,6 +74,15 @@ class LogstreamCommand extends Command
 
         $connector = new Connector($config);
         $client = Client::factory($connector);
+
+        $client->addOption('headers', [
+            'User-Agent' => sprintf(
+                "%s/%s (https://github.com/typhonius/acquia-logstream)",
+                $this->getApplication()->getName(),
+                $this->getApplication()->getVersion()
+            )
+        ]);
+
         $logs = new Logs($client);
 
         $stream = $logs->stream($input->getArgument('environmentUuid'));
