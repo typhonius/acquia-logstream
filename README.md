@@ -1,5 +1,5 @@
 [![Packagist](https://img.shields.io/packagist/v/typhonius/acquia-logstream.svg)](https://packagist.org/packages/typhonius/acquia-logstream)
-[![Build Status](https://travis-ci.org/typhonius/acquia-logstream.svg?branch=master)](https://travis-ci.org/typhonius/acquia-logstream)
+![Acquia Logstream Test](https://github.com/typhonius/acquia-logstream/workflows/Acquia%20Logstream%20Test/badge.svg)
 [![Total Downloads](https://poser.pugx.org/typhonius/acquia-logstream/downloads.png)](https://packagist.org/packages/typhonius/acquia-logstream)
 [![License](https://poser.pugx.org/typhonius/acquia-logstream/license.png)]()
 
@@ -31,8 +31,8 @@ A Phar file will be attached to each tagged release on GitHub. This can be downl
 *Shell script*
 
 A shell script has been included as a wrapper for the logstream command which will allow users to run the logstream command directly without further requirements. This can be invoked by running `./bin/logstream acquia:logstream` from the cloned directory.
-  
-  
+
+
 ### PHP Library
 
 The `LogstreamManager` class can be included in any other PHP library as it has been within the [Acquia Cli](https://github.com/typhonius/acquia_cli) tool. The simplest method of including and calling this library is as follows:
@@ -84,7 +84,7 @@ There are also three optional parameters which can be used to filter log types, 
 # Stream all logs from all servers
 ./bin/logstream acquia:logstream APIKEY APISECRET ENVIRONMENTUUID
 
-# Stream Varnish and NGINX logs 
+# Stream Varnish and NGINX logs
 ./bin/logstream acquia:logstream APIKEY APISECRET ENVIRONMENTUUID -t bal-request -t varnish-request
 
 # Stream PHP error and Apache error logs from one server
