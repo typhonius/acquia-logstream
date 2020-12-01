@@ -67,7 +67,7 @@ Options:
   -t, --logtypes=LOGTYPES  Log types to stream [default: ["bal-request","varnish-request","apache-request","apache-error","php-error","drupal-watchdog","drupal-request","mysql-slow"]] (multiple values allowed)
   -s, --servers=SERVERS    Servers to stream logs from e.g. web-1234. (multiple values allowed)
   -c, --colourise          Colorise the output based on HTTP status code.
-  -h, --help               Display this help message
+  -h, --help               Display help for the given command. When no command is given display help for the list command
   -q, --quiet              Do not output any message
   -V, --version            Display this application version
       --ansi               Force ANSI output
