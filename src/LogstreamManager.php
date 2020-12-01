@@ -240,7 +240,7 @@ class LogstreamManager
             }
         } elseif ($message->cmd === 'line') {
             $colour = $this->pickColour($message);
-            
+
             if ($this->output->isVeryVerbose()) {
                 $this->output->writeln(sprintf('<%s>%s</>', $colour, $msg));
             } elseif ($this->output->isVerbose()) {

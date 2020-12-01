@@ -187,7 +187,7 @@ LINE;
 LINE;
 
         $this->assertEquals($lineResponse . PHP_EOL, $this->output->fetch());
-    
+
         // Check error response
         $this->output->setVerbosity(OutputInterface::VERBOSITY_DEBUG);
 
