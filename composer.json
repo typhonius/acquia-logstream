@@ -11,9 +11,9 @@
     "require": {
         "typhonius/acquia-php-sdk-v2": "^2.0.0",
         "ratchet/pawl": "^0.3",
-        "symfony/console": "^4 || ^5",
-        "php": ">=7.3",
-        "consolidation/self-update": "^1.1"
+        "symfony/console": "^6",
+        "php": ">=8.0.3",
+        "consolidation/self-update": "^2.0"
     },
     "autoload":{
         "psr-4":{
