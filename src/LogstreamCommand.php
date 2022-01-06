@@ -18,7 +18,6 @@ use AcquiaCloudApi\Endpoints\Logs;
  */
 class LogstreamCommand extends Command
 {
-
     protected static $defaultName = 'acquia:logstream';
 
     /**

@@ -6,7 +6,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LogstreamManagerTest extends AcquiaLogstreamTestCase
 {
-
     public function testSetLogServerFilter()
     {
         $property = $this->getPrivateProperty($this->logstream, 'servers');
