@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "typhonius/acquia-php-sdk-v2": "^2.0.0",
-        "ratchet/pawl": "^0.3",
+        "ratchet/pawl": "^0.4.1",
         "symfony/console": "^4 || ^5",
         "php": ">=7.3",
         "consolidation/self-update": "^1.1"
