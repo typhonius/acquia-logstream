@@ -12,7 +12,6 @@ use AcquiaLogstream\LogstreamManager;
  */
 abstract class AcquiaLogstreamTestCase extends TestCase
 {
-
     protected $output;
     protected $logstream;
 

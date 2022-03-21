@@ -12,7 +12,6 @@ use React\EventLoop\Factory as EventLoop;
 
 class LogstreamManager
 {
-
     public const LOGSTREAM_URI = 'wss://logstream.acquia.com:443/ah_websocket/logstream/v1';
 
     private $input;

@@ -11,13 +11,13 @@
     "require": {
         "typhonius/acquia-php-sdk-v2": "^2.0.0",
         "ratchet/pawl": "^0.4.1",
-        "symfony/console": "^4 || ^5",
-        "php": ">=7.3",
-        "consolidation/self-update": "^1.1"
+        "symfony/console": "^5 | ^6",
+        "php": "^7.4 | ^8.0.3 | ^8.1",
+        "consolidation/self-update": "^1.2 | ^2.0"
     },
-    "autoload":{
-        "psr-4":{
-            "AcquiaLogstream\\":"src"
+    "autoload": {
+        "psr-4": {
+            "AcquiaLogstream\\": "src"
         }
     },
     "require-dev": {
@@ -29,7 +29,7 @@
     "scripts": {
         "phar:install-tools": [
             "mkdir -p tools",
-            "curl -L https://github.com/humbug/box/releases/download/3.8.4/box.phar -o tools/box",
+            "curl -L https://github.com/box-project/box/releases/download/3.16.0/box.phar -o tools/box",
             "chmod +x tools/box"
         ],
         "phar:build": "env PATH=tools:$PATH box compile",
@@ -50,5 +50,10 @@
         "release": [
             "release VERSION"
         ]
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
     }
 }
