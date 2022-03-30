@@ -14,7 +14,8 @@ class LogstreamManager
 {
     public const LOGSTREAM_URI = 'wss://logstream.acquia.com:443/ah_websocket/logstream/v1';
 
-    private $input;
+    // $input is currently unused but may be useful in the future.
+    private $input; // @phpstan-ignore-line
     private $output;
     private $logTypes = [];
     private $servers = [];
