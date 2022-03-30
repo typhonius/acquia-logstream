@@ -28,16 +28,23 @@ class LogstreamManagerTest extends AcquiaLogstreamTestCase
 
     public function testSetLogTypeFilter()
     {
-        $this->logstream->setLogTypeFilter(['apache-access']);
+        $this->logstream->setLogTypeFilter(['apache-request']);
         $property = $this->getPrivateProperty($this->logstream, 'logTypes');
 
-        $this->assertSame($property->getValue($this->logstream), [0 => 'apache-access']);
+        $this->assertSame($property->getValue($this->logstream), [0 => 'apache-request']);
+    }
+
+    public function testSetInvalidLogTypeFilter()
+    {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Invalid log type: (apache-access)');
+        $this->logstream->setLogTypeFilter(['apache-access']);
     }
 
     public function testGetLogTypeFilter()
     {
-        $property = $this->setPrivateProperty($this->logstream, 'logTypes', ['apache-access']);
-        $this->assertSame($this->logstream->getLogTypeFilter(), [0 => 'apache-access']);
+        $property = $this->setPrivateProperty($this->logstream, 'logTypes', ['apache-request']);
+        $this->assertSame($this->logstream->getLogTypeFilter(), [0 => 'apache-request']);
     }
 
     public function testSetDns()
