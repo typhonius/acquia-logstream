@@ -13,6 +13,18 @@ use React\EventLoop\Factory as EventLoop;
 class LogstreamManager
 {
     public const LOGSTREAM_URI = 'wss://logstream.acquia.com:443/ah_websocket/logstream/v1';
+    // To make this future-proof, it would be better to query the logstream API for available streams.
+    // @see https://github.com/typhonius/acquia-logstream/issues/143
+    public const AVAILABLE_TYPES = [
+        'bal-request' => 'Balancer request',
+        'varnish-request' => 'Varnish request',
+        'apache-request' => 'Apache request',
+        'apache-error' => 'Apache error',
+        'drupal-request' => 'Drupal request',
+        'drupal-watchdog' => 'Drupal watchdog',
+        'php-error' => 'PHP error',
+        'mysql-slow' => 'MySQL slow query',
+    ];
 
     // $input is currently unused but may be useful in the future.
     private $input; // @phpstan-ignore-line
@@ -99,9 +111,16 @@ class LogstreamManager
      * Sets log types to filter logs from.
      *
      * @param array $types
+     *
+     * @throws \Exception
      */
     public function setLogTypeFilter(array $types): void
     {
+        foreach ($types as $type) {
+            if (!array_key_exists($type, self::AVAILABLE_TYPES)) {
+                throw new \RuntimeException(sprintf('Invalid log type: (%s)', $type));
+            }
+        }
         $this->logTypes = $types;
     }
 
