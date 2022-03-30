@@ -20,9 +20,9 @@ class LogstreamManager
         'varnish-request' => 'Varnish request',
         'apache-request' => 'Apache request',
         'apache-error' => 'Apache error',
-        'drupal-request' => 'Drupal request',
-        'drupal-watchdog' => 'Drupal watchdog',
         'php-error' => 'PHP error',
+        'drupal-watchdog' => 'Drupal watchdog',
+        'drupal-request' => 'Drupal request',
         'mysql-slow' => 'MySQL slow query',
     ];
 
