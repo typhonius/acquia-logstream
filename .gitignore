@@ -3,3 +3,4 @@ tests/logs
 tools
 *.phar
 .idea
+.phpunit.result.cache
