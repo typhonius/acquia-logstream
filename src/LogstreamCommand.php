@@ -36,16 +36,7 @@ class LogstreamCommand extends Command
                 't',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Log types to stream',
-                [
-                    'bal-request',
-                    'varnish-request',
-                    'apache-request',
-                    'apache-error',
-                    'php-error',
-                    'drupal-watchdog',
-                    'drupal-request',
-                    'mysql-slow'
-                ]
+                array_keys(LogstreamManager::AVAILABLE_TYPES)
             )
             ->addOption(
                 'servers',
