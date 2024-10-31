@@ -1,8 +1,9 @@
 <?php
 
 use AcquiaLogstream\LogstreamCommand;
-use Symfony\Component\Console\Application;
 use SelfUpdate\SelfUpdateCommand;
+use SelfUpdate\SelfUpdateManager;
+use Symfony\Component\Console\Application;
 
 $pharPath = \Phar::running(true);
 if ($pharPath) {
@@ -22,7 +23,8 @@ $version = trim(file_get_contents(dirname(__DIR__) . '/VERSION'));
 $application = new Application('Logstream', $version);
 $application->add(new LogstreamCommand());
 
-$selfUpdate = new SelfUpdateCommand('Logstream', $version, 'typhonius/acquia-logstream');
+$selfUpdateManager = new SelfUpdateManager('Logstream', $version, 'typhonius/acquia-logstream');
+$selfUpdate = new SelfUpdateCommand($selfUpdateManager);
 $application->add($selfUpdate);
 
 $application->run();
