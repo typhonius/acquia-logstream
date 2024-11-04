@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c13b2c49d34946d344a69ffd2077f6d3",
+    "content-hash": "0e4777c9c1dcf8583f0f901f7cf6ffe4",
     "packages": [
         {
             "name": "composer/semver",
@@ -89,7 +89,7 @@
         },
         {
             "name": "consolidation/self-update",
-            "version": "3.0.0-alpha2",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/consolidation/self-update.git",
@@ -141,7 +141,7 @@
             "description": "Provides a self:update command for Symfony Console applications.",
             "support": {
                 "issues": "https://github.com/consolidation/self-update/issues",
-                "source": "https://github.com/consolidation/self-update/tree/3.0.0-alpha2"
+                "source": "https://github.com/consolidation/self-update/tree/3.0.0"
             },
             "time": "2024-09-09T21:25:12+00:00"
         },
@@ -4844,9 +4844,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "consolidation/self-update": 15
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

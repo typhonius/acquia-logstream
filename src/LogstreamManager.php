@@ -232,7 +232,7 @@ class LogstreamManager
 
                     $conn->send(json_encode($this->getAuthArray()));
                 },
-                function (\Exception $e) use ($loop) {
+                function (\Throwable $e) use ($loop) {
                     echo "Could not connect: {$e->getMessage()}\n";
                     $loop->stop();
                 }
