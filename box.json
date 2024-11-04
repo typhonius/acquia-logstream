@@ -1,5 +1,4 @@
 {
-    "chmod": "0755",
     "directories": [
         "src"
     ],
@@ -9,13 +8,12 @@
     ],
     "finder": [
         {
-            "name": "*.php",
+            "name": "{\\.(php|bash|fish|zsh)}",
             "exclude": ["Tests"],
             "in": ["vendor", "bin"]
         }
     ],
     "git-version": "package_version",
     "main": "bin/logstream",
-    "output": "logstream.phar",
-    "stub": true
+    "output": "logstream.phar"
 }
